@@ -1,0 +1,30 @@
+#!/bin/bash
+
+source functions.sh
+
+build_project
+start_server $1 $2
+wait_till_started $1
+
+printf "\nInvoking /health endpoint (in every .1s) before N/W partition...\n"
+invoke_health_endpoint $1 0.1s &
+pid_curl=$!
+sleep 10s
+
+simulate_network_partition $2
+printf "\nN/W will continue for 600 seconds. Check whether any more /health requests complete?\n"
+kill -9 $pid_curl 1>>$log_file 2>>$log_file
+invoke_health_endpoint $1 5s &
+pid_curl=$!
+sleep 600s
+
+$JAVA_HOME/bin/jstack $pid_java > ../dump.tdump
+printf "\nThread dump created - ./dump.tdump"
+
+fix_simulated_network_partition
+sleep 60s
+
+kill -9 $pid_curl 1>>$log_file 2>>$log_file
+kill -9 $pid_java 1>>$log_file 2>>$log_file
+printf "\nDONE!\n"
+
