@@ -6,6 +6,7 @@ If a network partition occurs during `JGitEnvironmentRepository#fetch`, config s
 ```
 git clone https://github.com/fahimfarookme/config-server-stuck-thread-issue.git
 cd config-server-stuck-thread-issue/scripts
+vim set_env.sh # and then set JAVA_HOME
 ./nw-partition-during-fetch.sh 7000 git issue
 ```
 You will notice that no response is received after `Simulating a network partition for dns github.com`
@@ -16,6 +17,7 @@ You will notice that no response is received after `Simulating a network partiti
 ```
 git clone https://github.com/fahimfarookme/config-server-stuck-thread-issue.git
 cd config-server-stuck-thread-issue/scripts
+vim set_env.sh # and then set JAVA_HOME
 ./nw-partition-during-fetch.sh 7000 git fix
 ```
 You will continue to receive responses after `Simulating a network partition for dns github.com` due to timeouts set. Also the following on the logs;
